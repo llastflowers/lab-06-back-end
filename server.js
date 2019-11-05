@@ -64,11 +64,11 @@ app.get('/location', (request, response) => {
     }
 });
 
-app.get('/weather', (req, rep) => {
+app.get('/weather', (request, response) => {
     try {
-        const location = req.query.location;
+        const location = request.query.location;
         const result = getWeatherLoc(location);
-        rep.status(200).json(result);  
+        response.status(200).json(result);  
     }
 
     catch (err){
