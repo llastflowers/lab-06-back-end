@@ -10,7 +10,7 @@ This is a Back-end server for City Explorer to convert the location of a user in
 
 ## Getting Started
 <!-- What are the steps that a developer user must take in order to build this app on their own machine and get it running? -->
-
+Install Node, Express, Dotenv, and CORS. Run NPM Start with package-lock.json.
 
 ## Architecture
 <!-- To the best of your ability, provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. The audience would be a new developer user to the project -->
