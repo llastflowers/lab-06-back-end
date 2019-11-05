@@ -72,7 +72,7 @@ app.get('/weather', (request, response) => {
     }
 
     catch (err){
-        rep.status(500).send('Sorry, something went wrong, please try again!');
+        response.status(500).send('Sorry, something went wrong, please try again!');
     }
 });
 
