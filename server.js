@@ -14,12 +14,14 @@ function toWeather(weather){
     const weatherResult = weather[0].daily.data;
 
     weatherResult.forEach(result => {
-        [
-            {
-                forecast: result.summary,
-                time: Date(result.time)
-            }
-        ];
+        let end = [];
+        
+        end.push({
+            forecast: result.summary,
+            time: Date(result.time)
+        });
+
+        return end;
     });
 }
 
