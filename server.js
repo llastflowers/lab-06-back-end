@@ -14,7 +14,7 @@ function toWeather(weather){
     const weatherResult = weather[0].daily.data;
 
     weatherResult.forEach(result => {
-        return [
+        [
             {
                 forecast: result.summary,
                 time: Date(result.time)
