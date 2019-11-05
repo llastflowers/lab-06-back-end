@@ -8,6 +8,20 @@ const PORT = process.env.PORT;
 app.use(cors());
 
 const geoData = require('./data/geo.json');
+const weatherData = require('.data/darksky.json');
+
+function toWeather(weather){
+    const weatherResult = weather[0].daily.data;
+
+    weatherResult.forEach(result => {
+        return [
+            {
+                forecast: result.summary,
+                time: Date(result.time)
+            }
+        ];
+    });
+}
 
 function toLocation(geo){
     const firstResult = geo.results[0];
@@ -28,6 +42,14 @@ function getLatLng(location) {
     return toLocation(geoData);
 }
 
+function getWeatherLoc(location){
+    if (location === 'bad location'){
+        throw new Error();
+    }
+
+    return toWeather(weatherData);
+}
+
 app.get('/location', (request, response) => {
     try {
         const location = request.query.location;
@@ -37,6 +59,18 @@ app.get('/location', (request, response) => {
 
     catch (err){
         response.status(500).send('Sorry, something went wrong, please try again!');
+    }
+});
+
+app.get('/weather', (req, rep) => {
+    try {
+        const location = req.query.location;
+        const result = getWeatherLoc(location);
+        rep.status(200).json(result);  
+    }
+
+    catch (err){
+        rep.status(500).send('Sorry, something went wrong, please try again!');
     }
 });
 
