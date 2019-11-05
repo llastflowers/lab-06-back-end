@@ -8,22 +8,25 @@ const PORT = process.env.PORT;
 app.use(cors());
 
 const geoData = require('./data/geo.json');
-// const weatherData = require('.data/darksky.json');
+const weatherData = require('./data/darksky.json');
 
-// function toWeather(weather){
-//     const weatherResult = weather[0].daily.data;
+function toWeather(weather){
+    let weatherResult = weather.daily.data;
+    let end = [];
 
-//     weatherResult.forEach(result => {
-//         let end = [];
+    weatherResult.forEach(result => {
         
-//         end.push({
-//             forecast: result.summary,
-//             time: Date(result.time)
-//         });
 
-//         return end;
-//     });
-// }
+        end.push({
+            forecast: result.summary,
+            time: Date(result.time)
+        });
+
+        
+    });
+
+    return end;
+}
 
 function toLocation(geo){
     const firstResult = geo.results[0];
@@ -44,13 +47,13 @@ function getLatLng(location) {
     return toLocation(geoData);
 }
 
-// function getWeatherLoc(location){
-//     if (location === 'bad location'){
-//         throw new Error();
-//     }
+function getWeatherLoc(location){
+    if (location === 'bad location'){
+        throw new Error();
+    }
 
-//     return toWeather(weatherData);
-// }
+    return toWeather(weatherData);
+}
 
 app.get('/location', (request, response) => {
     try {
@@ -64,17 +67,17 @@ app.get('/location', (request, response) => {
     }
 });
 
-// app.get('/weather', (request, response) => {
-//     try {
-//         const location = request.query.location;
-//         const result = getWeatherLoc(location);
-//         response.status(200).json(result);  
-//     }
+app.get('/weather', (request, response) => {
+    try {
+        const location = request.query.location;
+        const result = getWeatherLoc(location);
+        response.status(200).json(result);  
+    }
 
-//     catch (err){
-//         response.status(500).send('Sorry, something went wrong, please try again!');
-//     }
-// });
+    catch (err){
+        response.status(500).send('Sorry, something went wrong, please try again!');
+    }
+});
 
 app.listen(PORT, () => {
     // eslint-disable-next-line no-console
