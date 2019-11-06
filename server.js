@@ -10,25 +10,18 @@ app.use(cors());
 const geoData = require('./data/geo.json');
 const weatherData = require('./data/darksky.json');
 
-function toWeather(weather){
+function toWeather(weather) {
     let weatherResult = weather.daily.data;
-    let end = [];
 
-    weatherResult.forEach(result => {
-        
-
-        end.push({
+    weatherResult.map(result => {
+        return {
             forecast: result.summary,
-            time: Date(result.time)
-        });
-
-        
+            time: new Date(result.time * 1000).toDateString(),
+        };
     });
-
-    return end;
 }
 
-function toLocation(geo){
+function toLocation(geo) {
     const firstResult = geo.results[0];
     const geometry = firstResult.geometry;
 
@@ -40,15 +33,15 @@ function toLocation(geo){
 }
 
 function getLatLng(location) {
-    if (location === 'bad location'){
+    if (location === 'bad location') {
         throw new Error();
     }
 
     return toLocation(geoData);
 }
 
-function getWeatherLoc(location){
-    if (location === 'bad location'){
+function getWeatherLoc(location) {
+    if (location === 'bad location') {
         throw new Error();
     }
 
@@ -60,9 +53,7 @@ app.get('/location', (request, response) => {
         const location = request.query.location;
         const result = getLatLng(location);
         response.status(200).json(result);
-    }
-
-    catch (err){
+    } catch (err) {
         response.status(500).send('Sorry, something went wrong, please try again!');
     }
 });
@@ -71,10 +62,8 @@ app.get('/weather', (request, response) => {
     try {
         const location = request.query.location;
         const result = getWeatherLoc(location);
-        response.status(200).json(result);  
-    }
-
-    catch (err){
+        response.status(200).json(result);
+    } catch (err) {
         response.status(500).send('Sorry, something went wrong, please try again!');
     }
 });
