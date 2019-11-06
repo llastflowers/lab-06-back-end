@@ -54,7 +54,6 @@ app.get('/location', async(request, response) => {
         const GEOCODE_API_KEY = process.env.GEOCODE_API_KEY;
         const mapsLocation = await superagent.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${GEOCODE_API_KEY}`);
         const parsedMapLocation = JSON.parse(mapsLocation.text);
-        console.log(parsedMapLocation);
         const result = toLocation(parsedMapLocation);
         response.status(200).json(result);
     } catch (err) {
