@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT;
 app.use(cors());
 
-const weatherData = require('./data/darksky.json');
+let latlng;
 
 function toWeather(weather) {
     let weatherResult = weather.daily.data;
@@ -32,22 +32,6 @@ function toLocation(geo) {
     };
 }
 
-// function getLatLng(location) {
-//     if (location === 'bad location') {
-//         throw new Error();
-//     }
-
-//     return toLocation(geoData);
-// }
-
-function getWeatherLoc(location) {
-    if (location === 'bad location') {
-        throw new Error();
-    }
-
-    return toWeather(weatherData);
-}
-
 app.get('/location', async(request, response) => {
     try {
         const location = request.query.search;
@@ -55,16 +39,20 @@ app.get('/location', async(request, response) => {
         const mapsLocation = await superagent.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${location}&key=${GEOCODE_API_KEY}`);
         const parsedMapLocation = JSON.parse(mapsLocation.text);
         const result = toLocation(parsedMapLocation);
+        latlng = result;
         response.status(200).json(result);
     } catch (err) {
         response.status(500).send('Sorry, something went wrong, please try again!');
     }
 });
 
-app.get('/weather', (request, response) => {
+app.get('/weather', async(request, response) => {
     try {
-        const location = request.query.location;
-        const result = getWeatherLoc(location);
+        const location = latlng;
+        const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
+        const weatherData = await superagent.get(`https://api.darksky.net/forecast/${WEATHER_API_KEY}/${location.latitude},${location.longitude}`);
+        const parsedWeatherData = JSON.parse(weatherData.text);
+        const result = toWeather(parsedWeatherData);
         response.status(200).json(result);
     } catch (err) {
         response.status(500).send('Sorry, something went wrong, please try again!');
