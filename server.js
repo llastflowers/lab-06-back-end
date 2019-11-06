@@ -13,7 +13,7 @@ const weatherData = require('./data/darksky.json');
 function toWeather(weather) {
     let weatherResult = weather.daily.data;
 
-    weatherResult.map(result => {
+    return weatherResult.map(result => {
         return {
             forecast: result.summary,
             time: new Date(result.time * 1000).toDateString(),
