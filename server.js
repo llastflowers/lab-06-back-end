@@ -32,22 +32,6 @@ function toLocation(geo) {
     };
 }
 
-// function getLatLng(location) {
-//     if (location === 'bad location') {
-//         throw new Error();
-//     }
-
-//     return toLocation(geoData);
-// }
-
-function getWeatherLoc(location) {
-    if (location === 'bad location') {
-        throw new Error();
-    }
-
-    return toWeather(weatherData);
-}
-
 app.get('/location', async(request, response) => {
     try {
         const location = request.query.search;
