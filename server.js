@@ -81,13 +81,13 @@ app.get('/weather', async(request, response) => {
     }
 });
 
-app.get('/events', async(request, response) => {
-    const location = latlng;
-    const EVENTBRITE_API_KEY = process.env.EVENTBRITE_API_KEY;
-    const eventData = await superagent.get(`https://www.eventbriteapi.com/v3/events/search?token=${EVENTBRITE_API_KEY}&location.latitude=${location.latitude}&location.longitude=${location.longitude}`);
-    const parsedEventData = JSON.parse(eventData.text);
-    const result = toWeather(parsedEventData);
-});
+// app.get('/events', async(request, response) => {
+//     const location = latlng;
+//     const EVENTBRITE_API_KEY = process.env.EVENTBRITE_API_KEY;
+//     const eventData = await superagent.get(`https://www.eventbriteapi.com/v3/events/search?token=${EVENTBRITE_API_KEY}&location.latitude=${location.latitude}&location.longitude=${location.longitude}`);
+//     const parsedEventData = JSON.parse(eventData.text);
+//     const result = toWeather(parsedEventData);
+// });
 
 app.get('/trails', async(req, res) => {
     const trailObject = await getTrailResponse(req.query.latitude, req.query.longitude);
