@@ -21,6 +21,28 @@ function toWeather(weather) {
     });
 }
 
+const getTrailResponse = async(lat, long) => {
+    const trailData = await superagent.get(`https://www.hikingproject.com/data/get-trails?lat=${lat}&lon=${long}&maxDistance=200&key=${process.env.HIKING_API_KEY}`);
+
+    const actualTrailData = JSON.parse(trailData.text);
+    let trailsArray = actualTrailData.trails;
+    return trailsArray.map(trails => { 
+        return {
+            name: trails.name,
+            location: trails.location,
+            length: trails.length,
+            stars: trails.stars,
+            star_votes: trails.starVotes,
+            summary: trails.summary,
+            trail_url: trails.trail_url,
+            conditions: trails.conditions,
+            condition_date: trails.conditionDate,
+            condition_time: trails.conditionTime
+
+        };
+    });
+};
+
 function toLocation(geo) {
     const firstResult = geo.results[0];
     const geometry = firstResult.geometry;
@@ -67,7 +89,11 @@ app.get('/events', async(request, response) => {
     const result = toWeather(parsedEventData);
 });
 
+app.get('/trails', async(req, res) => {
+    const trailObject = await getTrailResponse(req.query.latitude, req.query.longitude);
 
+    res.json(trailObject);
+});
 
 app.listen(PORT, () => {
     // eslint-disable-next-line no-console
